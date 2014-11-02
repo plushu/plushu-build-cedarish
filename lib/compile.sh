@@ -100,8 +100,9 @@ EOF
 chmod +x /exec
 chmod +x /start
 mkdir -p "$app_dir"
-rm -rf {"$app_dir/"*,"$app_dir/".*} # ensure app_dir is clean
-mv {"$build_root/"*,"$build_root/".*} "$app_dir"
+shopt -s dotglob nullglob
+rm -rf "$app_dir/"* # ensure app_dir is clean
+mv "$build_root/"* "$app_dir"
 
 # Clean up
 rm -rf /tmp/*
