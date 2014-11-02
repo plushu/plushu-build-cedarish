@@ -20,7 +20,7 @@ if [[ -d "$app_dir" ]]; then
   mkdir -p "$cache_dir"
 
   # Load the files into a buildstep container
-  docker run -i -v "$cache_dir:/cache"
+  docker run -i -v "$cache_dir:/cache" \
     -v "$PLUSHU_BUILDPACKS_DIR:/buildpacks" \
     -v "$2:/src" --cidfile="$cidfile" \
     progrium/cedarish /bin/bash -c \

@@ -23,7 +23,7 @@ if [[ -d "$app_dir" ]]; then
   docker run -i -v "$cache_dir:/cache" \
     -v "$PLUSHU_BUILDPACKS_DIR:/buildpacks" \
     --cidfile="$cidfile" \
-    progrium/cedarish /bin/bash -c "mkdir -p /app && tar -xC /app
+    progrium/cedarish /bin/bash -c "mkdir -p /src && tar -xC /src
 
   $("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")"
 
