@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
+
+if command -v docker >/dev/null 2>&1 &&
+  id -Gn "$PLUSHU_USER" | grep -q '\bdocker\b'; then
+  docker pull progrium/cedarish
+else
+  cat >&2 <<EOF
+Docker doesn't appear to be installed and configured with the "$PLUSHU_USER"
+user in the "docker" group.
+
+If you install Docker, the plushu-docker plugin can be installed to configure
+Docker for the "$PLUSHU_USER" user:
+
+# plushu plugins:install docker
+
+Once docker is appropriately configured, reinstall this plugin with:
+
+\$ plushu plugins:reinstall $PLUSHU_PLUGIN_NAME
+EOF
+fi

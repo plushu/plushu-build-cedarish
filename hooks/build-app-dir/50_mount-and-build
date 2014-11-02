@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
+
+app_dir="$PLUSHU_APPS_DIR/$1"
+cache_dir="$app_dir/cache"
+cidfile="$app_dir/build.cid"
+
+# Source any special configuration for this app
+if [[ -f "$PLUSHU_APPS_DIR/$app/build.rc" ]]; then
+  source "$PLUSHU_APPS_DIR/$app/build.rc"
+
+  # Echo all commands if PLUSHU_TRACE was set in build.rc,
+  # and stop echoing them if it was unset
+  [[ -n "$PLUSHU_TRACE" ]] && set -x || set +x
+fi
+
+# If the app exists
+if [[ -d "$app_dir" ]]; then
+  # Ensure the app/cache directory exists
+  mkdir -p "$cache_dir"
+
+  # Load the files into a buildstep container
+  docker run -i -v "$cache_dir:/cache" -v "$2:/src" --cidfile="$cidfile" \
+    progrium/cedarish /bin/bash -c \
+    "$("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")"
+
+  # Convert the built app container to an image
+  build_image=$(docker commit $(<"$cidfile"))
+  docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
+
+  # Save the built image ID
+  printf '%s\n' "$build_image" >"$app_dir/build.iid"
+fi
