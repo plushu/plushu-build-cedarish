@@ -22,6 +22,7 @@ if [[ -d "$app_dir" ]]; then
   # Load the files into a cedarish container
   docker run -i -v "$cache_dir:/cache" \
     -v "$PLUSHU_BUILDPACKS_DIR:/buildpacks" \
+    -v "$PLUSHU_PLUGIN_PATH/lib:/build-scripts" \
     --cidfile="$cidfile" \
     progrium/cedarish /bin/bash -c "mkdir -p /src && tar -xC /src
 

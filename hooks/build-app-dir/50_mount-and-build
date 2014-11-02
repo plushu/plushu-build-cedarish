@@ -22,6 +22,7 @@ if [[ -d "$app_dir" ]]; then
   # Load the files into a buildstep container
   docker run -i -v "$cache_dir:/cache" \
     -v "$PLUSHU_BUILDPACKS_DIR:/buildpacks" \
+    -v "$PLUSHU_PLUGIN_PATH/lib:/build-scripts" \
     -v "$2:/src" --cidfile="$cidfile" \
     progrium/cedarish /bin/bash -c \
     "$("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")"
