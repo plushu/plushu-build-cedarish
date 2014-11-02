@@ -18,6 +18,7 @@ mkdir -p $cache_root
 # Ensure the destination location, and a location for profile scripts, exists
 mkdir -p $build_root/.profile.d
 
+# don't bother ensuring the buildpack location exists
 # if buildpack_root is missing we have bigger problems to worry about
 
 cd $build_root
