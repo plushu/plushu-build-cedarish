@@ -53,9 +53,8 @@ else
 fi
 
 ## Buildpack compile
-"$selected_buildpack/bin/compile" "$build_root" "$cache_root"
-"$selected_buildpack/bin/release" "$build_root" "$cache_root" \
-	> "$build_root/.release"
+"$selected_buildpack/bin/compile" "$build_root" "$cache_root" "$env_root"
+"$selected_buildpack/bin/release" "$build_root"	> "$build_root/.release"
 
 ## Display process types
 echo "-----> Discovering process types"
