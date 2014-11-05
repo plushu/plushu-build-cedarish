@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
 
-printf '\n/build-scripts/compile.sh\n'
+printf '\n/build/compile.sh\n'
