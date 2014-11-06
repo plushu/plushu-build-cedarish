@@ -24,6 +24,7 @@ if [[ -d "$app_dir" ]]; then
     -v "$PLUSHU_BUILDPACKS_DIR:/buildpacks" \
     -v "$PLUSHU_PLUGIN_PATH/lib:/build" \
     -v "$2:/src" --cidfile="$cidfile" \
+    -e BUILD_USE_BUILDPACK \
     progrium/cedarish /bin/bash -c \
     "$("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")"
 
