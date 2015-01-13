@@ -34,4 +34,7 @@ if [[ -d "$app_dir" ]]; then
 
   # Save the built image ID
   printf '%s\n' "$build_image" >"$app_dir/build.iid"
+
+  # Perform convergent completion steps
+  "$PLUSHU_ROOT/lib/plushook" built-app "$app"
 fi
