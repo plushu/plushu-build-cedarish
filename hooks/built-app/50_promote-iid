@@ -3,5 +3,6 @@ set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
 
 app_dir="$PLUSHU_APPS_DIR/$1"
 
-[[ -e "$app_dir/build.new.iid" ]] &&
+if [[ -e "$app_dir/build.new.iid" ]]; then
   mv -f "$app_dir/build.new.iid" "$app_dir/build.iid"
+fi
