@@ -78,7 +78,7 @@ for file in .profile.d/*.sh; do
 	source \$file
 done
 hash -r
-"\$@"
+exec "\$@"
 EOF
 
 cat > /start <<EOF
@@ -90,9 +90,12 @@ for file in .profile.d/*.sh; do
 done
 hash -r
 if [[ -f Procfile ]]; then
-  ruby -e "require 'yaml';puts YAML.load_file('Procfile')['\$1']" | bash
+  exec bash -c "\$(ruby -e "require 'yaml';
+  	puts YAML.load_file('Procfile')[ARGV[0]]" "\$1")"
 else
-	ruby -e "require 'yaml';puts (YAML.load_file('.release')['default_process_types'] || {})['\$1']" | bash
+	exec bash -c "\$(ruby -e "require 'yaml';
+		puts (YAML.load_file('.release')['default_process_types']
+			|| {})[ARGV[0]]" "\$1")"
 fi
 EOF
 
