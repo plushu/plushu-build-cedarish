@@ -27,7 +27,8 @@ if [[ -d "$app_dir" ]]; then
     -e BUILD_USE_BUILDPACK \
     progrium/cedarish /bin/bash -c "mkdir -p /src && tar -xC /src
 
-  $("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")"
+  $("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")" || {
+    docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"; }
 
   # Convert the built app container to an image
   build_image=$(docker commit $(<"$cidfile"))
