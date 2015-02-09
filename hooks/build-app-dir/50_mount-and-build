@@ -40,6 +40,8 @@ if [[ -d "$app_dir" ]]; then
 
   # If the build fails
   else
+    status=$?
     docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
+    exit "$status"
   fi
 fi
