@@ -20,22 +20,26 @@ if [[ -d "$app_dir" ]]; then
   mkdir -p "$cache_dir"
 
   # Load the files into a buildstep container
-  docker run -i -v "$cache_dir:/cache" \
+  if docker run -i -v "$cache_dir:/cache" \
     -v "$PLUSHU_BUILDPACKS_DIR:/buildpacks" \
     -v "$PLUSHU_PLUGIN_PATH/lib:/build" \
     -v "$2:/src" --cidfile="$cidfile" \
     -e BUILD_USE_BUILDPACK \
     progrium/cedarish /bin/bash -c \
-    "$("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")" || {
-    docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"; }
+    "$("$PLUSHU_ROOT/lib/plushook" build-app-commands "$app")"; then
 
-  # Convert the built app container to an image
-  build_image=$(docker commit $(<"$cidfile"))
-  docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
+    # Convert the built app container to an image
+    build_image=$(docker commit $(<"$cidfile"))
+    docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
 
-  # Save the built image ID
-  printf '%s\n' "$build_image" >"$app_dir/build.new.iid"
+    # Save the built image ID
+    printf '%s\n' "$build_image" >"$app_dir/build.new.iid"
 
-  # Perform convergent completion steps
-  "$PLUSHU_ROOT/lib/plushook" built-app "$1"
+    # Perform convergent completion steps
+    "$PLUSHU_ROOT/lib/plushook" built-app "$1"
+
+  # If the build fails
+  else
+    docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
+  fi
 fi
