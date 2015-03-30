@@ -60,13 +60,17 @@ fi
 ## Display process types
 echo "-----> Discovering process types"
 if [[ -f "$build_root/Procfile" ]]; then
-	types=$(ruby -e "require 'yaml';puts YAML.load_file('$build_root/Procfile').keys().join(', ')")
+	types=$(ruby -e "require 'yaml';
+		puts YAML.load_file('$build_root/Procfile').keys().join(', ')")
 	echo "       Procfile declares types -> $types"
 fi
 default_types=""
 if [[ -s "$build_root/.release" ]]; then
-	default_types=$(ruby -e "require 'yaml';puts (YAML.load_file('$build_root/.release')['default_process_types'] || {}).keys().join(', ')")
-	[[ $default_types ]] && echo "       Default process types for $buildpack_name -> $default_types"
+	default_types=$(ruby -e "require 'yaml';
+		puts (YAML.load_file('$build_root/.release')['default_process_types'] ||
+			{}).keys().join(', ')")
+	[[ $default_types ]] && \
+		echo "       Default process types for $buildpack_name -> $default_types"
 fi
 
 ## Generate start commands
@@ -94,8 +98,8 @@ if [[ -f Procfile ]]; then
   	puts YAML.load_file('Procfile')[ARGV[0]]" "\$1")"
 else
 	exec bash -c "\$(ruby -e "require 'yaml';
-		puts (YAML.load_file('.release')['default_process_types']
-			|| {})[ARGV[0]]" "\$1")"
+		puts (YAML.load_file('.release')['default_process_types'] ||
+			{})[ARGV[0]]" "\$1")"
 fi
 EOF
 
